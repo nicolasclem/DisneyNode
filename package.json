@@ -1,0 +1,27 @@
+{
+  "name": "nodealkemy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicolasclem/nodeAlkemy.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nicolasclem/nodeAlkemy/issues"
+  },
+  "homepage": "https://github.com/nicolasclem/nodeAlkemy#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.20.0",
+    "sequelize-cli": "^6.4.1"
+  }
+}
