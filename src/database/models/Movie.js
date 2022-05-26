@@ -1,59 +1,62 @@
-module.exports = (sequelize, dataTypes) =>{
-    let alias = "Movie";
-    let cols = {
-
+module.exports = (sequelize, dataTypes)=>{
+    let alias = 'Movies';
+    let cols ={
         id: {
-            type: dataTypes.INTEGER(11),
+            type: dataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
-
         },
 
         image: {
-            type: dataTypes.STRING(45),
             
+            type: dataTypes.STRING,
         },
         title: {
-            type: dataTypes.STRING(45),
-            
+
+            type: dataTypes.STRING,
         },
 
+
         date: {
+            
             type: dataTypes.DATE,
         },
 
         rating: {
-            type: dataTypes.INT,
+
+            type: dataTypes.INTEGER,
         },
 
-        id_genre:{
-            type: dataTypes.INT,
+        id_genre: {
+            type: dataTypes.INTEGER,
+            allowNull:false,
         }
-
-        
     };
 
     let config = {
-        tableName : "movies",
-        timestamps :false
-    }
-    
-    const Movie = sequelize.define (alias,cols,config);
+        tableName: 'movies',
+        timestamps: false,
+    };
 
-    Movie.associate = function(models){
-        
-        Movie.belongsTo(models.Genre, {
-            as: "genres",
-            foreignKey: "id_genre"
-        }),
-        Movie.belongsToMany(models.Character,{
-            as:"characters",
-            through:"characters_movies",
-            foreignKey:"id_movie",
-            otherKey:"id_character"
+    let Movies = sequelize.define(alias, cols, config);
+
+    Movies.associate = function(models){
+
+        Movies.belongsTo(models.Genre, {
+            as:'genres',
+            foreignKey:'id_genre',
+        });
+
+        Movies.belongsToMany(models.Characters, {
+            
+            as:'characters',
+            through:'characters_movies',
+            foreignKey:'id_movie',
+            otherKey:'id_character',
+            timestamps: false,
         })
-        
+    
     }
 
-    return Movie;
+    return Movies;
 }

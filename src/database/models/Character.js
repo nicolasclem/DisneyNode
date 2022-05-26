@@ -1,54 +1,52 @@
-module.exports = (sequelize, dataTypes) =>{
-    let alias = "Character";
-    let cols = {
+module.exports = function (sequelize, dataTypes) {
+    let alias ='Characters';
 
-        id: {
-            type: dataTypes.INTEGER(11),
+    let cols = {
+        id:{
+            type: dataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
-
         },
 
-        image: {
-            type: dataTypes.STRING(45),
-            
-        },
-        name: {
-            type: dataTypes.STRING(45),
-            
+        name:{
+            type: dataTypes.STRING
         },
 
-        age: {
-            type: dataTypes.INT,
+        image:{
+            type: dataTypes.STRING
         },
 
-        weight: {
-            type: dataTypes.INT,
+        age:{
+            type: dataTypes.INTEGER
+        },
+
+        weight:{
+            type: dataTypes.INTEGER
         },
 
         history:{
-            type: dataTypes.STRING(255),
+            type: dataTypes.STRING
         }
-
-        
     };
 
     let config = {
-        tableName : "movies",
-        timestamps :false
-    }
-    
-    const Character = sequelize.define (alias,cols,config);
+        tableName:'characters',
+        timestamps: false,
+        undercode: true
+    };
 
-    Character.associate = function(models){
-        
-        Character.belongsToMany(models.Movie,{
-            as:"movies",
-            through:"characters_movies",
-            foreignKey:"id_character",
-            otherKey:"id_movies"
+    let Characters = sequelize.define(alias, cols, config);
+
+    Characters.associate = function(models){
+        Characters.belongsToMany(models.Movies, {
+            
+            as:'movies',
+            through:'characters_movies',
+            foreignKey:'id_character',
+            otherKey:'id_movie',
+            timestamps: false,
         })
-        
-    }
-    return Character;
+    };
+
+    return Characters;
 }
