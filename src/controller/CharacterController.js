@@ -67,7 +67,11 @@ const characterController ={
                                     })
                                 }).catch(error => console.log(error))
                         }
-                    }).catch(error => console.log(error))
+                    }).catch(() =>  res.status(400).json({
+                        msg: 'no se pudo crear el personaje!',
+                        status:400
+                    })
+                )
             } catch (err) {
                 console.log(err)
             }

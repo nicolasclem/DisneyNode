@@ -7,7 +7,7 @@ const {
     detail,
     del,
     edit
-} = require('../controller/CharacterControlle')
+} = require('../controller/CharacterController')
 
 
 router.get('/', show)
