@@ -1,13 +1,11 @@
 const  express = require('express')
 const router = express.Router()
-const userController = require('../controller/usersController')
+const {register,login} = require('../controller/usersController')
 
 
-router.get('/login',(req,res)=>{
-    res.send("estoy en login")
-})
+router.post('/login',login)
 
-router.post('/register',userController.register)
+router.post('/register',register)
 
 
 
