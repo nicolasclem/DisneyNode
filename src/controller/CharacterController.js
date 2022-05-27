@@ -123,19 +123,32 @@ const characterController ={
                         include: [{
                             association: 'movies'
                         }]
-                        // pendiente traer todas las movies del personaje!!!!
+                
                     })
                     try {
-                        character ?
+                        if(character){
+                            const moviesArr = character.movies.map(x => x.title)
+                        
+                            const OneCharacter={
+                                id:character.dataValues.id,
+                                name:character.dataValues.name,
+                                age:character.dataValues.age,
+                                image:character.dataValues.image,
+                                weight:character.dataValues.weight,
+                                history:character.dataValues.history,
+                                movies:moviesArr
+                            }
                             res.status(200).json({
-                                data: character,
+                                data: OneCharacter,
                                 status: 200
-                            }) :
+                            })
+
+                        }else{
                             res.status(400).json({
                                 msg: "no se encuentra en personaje",
                                 status: 400
                             })
-
+                        }
                     } catch (error) {
                         console.log(error);
                     }

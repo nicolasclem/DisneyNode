@@ -140,21 +140,35 @@ const  movieController ={
     },
     detail: async (req, res) => {
         const movie = await db.Movies.findByPk(req.params.id, {
-            include: [{
-                association: 'characters',association:'genres'    
-            }]
-            // pendiente traer todos los  personaje!!!!
+            include: [
+                {association: 'characters'} ,{ association:'genres'}  
+            ]
+            
         })
         try {
-            movie ?
+            
+            
+            if(movie){
+            const characterArr = movie.characters.map(x => x.name)
+                        
+                        const oneMovie={
+                            id:movie.dataValues.id,
+                            title:movie.dataValues.title,
+                            rating:movie.dataValues.rating,
+                            image:movie.dataValues.image,
+                            date:movie.dataValues.date,
+                            id_genre:movie.dataValues.genres.name,
+                            characters:characterArr
+                        }
                 res.status(200).json({
-                    data: movie,
+                    data: oneMovie,
                     status: 200
-                }) :
-                res.status(400).json({
+                }) 
+            }else{     res.status(400).json({
                     msg: "no se encuentra la pelicula",
                     status: 400
                 })
+            }
 
         } catch (error) {
             console.log(error);
