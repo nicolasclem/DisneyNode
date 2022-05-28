@@ -6,9 +6,9 @@ const db = require ('../database/models')
 const  movieController ={
     show: async (req, res) => {
         const movies= await db.Movies.findAll({
-            include: [{
-                association: 'characters',association:'genres'    
-            }]
+            include: [
+                {association: 'characters'},{association:'genres'}   
+            ]
         })
         if (movies.length > 0) {
             try {
@@ -52,9 +52,9 @@ const  movieController ={
                         })
                     } else {
                         db.Movies.create({
-                            include: [{
-                                association: 'characters',association:'genres'    
-                            }],
+                            include: [
+                                {association: 'characters'},{association:'genres'}    
+                            ],
                                 ...req.body,
                                 image: req.file.filename,
                             })
@@ -99,9 +99,9 @@ const  movieController ={
     edit: async (req, res) => {
 
         const movieToEdit = await db.Movies.findByPk(req.params.id, {
-            include: [{
-                association: 'characters',association:'genres'    
-            }]
+            include: [
+                {association: 'characters'},{association:'genres'}    
+            ]
         })
 
         try {
