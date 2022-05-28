@@ -1,4 +1,5 @@
 const db = require('../database/models');
+const {Op} = require("sequelize");
 
 
 
@@ -7,9 +8,20 @@ const characterController ={
 
     show: async (req, res) => {
             const characters = await db.Characters.findAll({
-                include: [{
-                    association: 'movies'
-                }]
+                include:[{
+                    association: 'movies',
+                  
+                }],
+            
+                where: {
+                    
+                    name: {
+                        [Op.substring]: req.query.name ? req.query.name : ""
+                    },
+                    age: {
+                        [Op.substring]: req.query.age ? req.query.age : ""
+                    }
+                }
             })
             if (characters.length > 0) {
                 try {
@@ -57,7 +69,7 @@ const characterController ={
                                         association: 'movies'
                                     }],
                                     ...req.body,
-                                    image: req.file.filename,
+                                    image: req.file != undefined ? req.file.filename : "imagen-no-disponible",
                                 })
                                 .then(character => {
                                     return res.status(200).json({

@@ -1,3 +1,4 @@
+
 const db = require('../database/models');
 
 
@@ -5,24 +6,8 @@ const db = require('../database/models');
 
 const  characterMovieController={
 
-        create: (req, res) => {
 
-            db.CharacterMovie.create({
-                include: [
-                    {association: 'movies'},
-                    {association: 'characters'}
-                ],
-                ...req.body
-            }).then(characterMovie => {
-                return res.status(200).json({
-                    data: characterMovie,
-                    status: 200,
-                    msg: 'relacion  creada'
-                })
-            }).catch(error => console.log(error))
-            
-        
-    },
+
     del: async (req, res) => {
         const characterMovie = await db.CharacterMovie.destroy({
             where: {
@@ -43,7 +28,23 @@ const  characterMovieController={
         } catch (error) {
             console.log(error);
         }
-    }
+    },
+
+    create:(req,res) =>{
+      db.CharacterMovie.create({
+            include:[
+                {association:'movies'},{association:'characters'}
+            ],
+            ...req.body
+        })
+        .then( characterMovie =>{
+            return res.status(200).json({
+                data:characterMovie,
+                msg:'relacion creada',
+                status:200,
+            })
+        }).catch(error=>console.log(error))
+    },
 
 }
 

@@ -73,7 +73,7 @@ const  userController = {
                             .then(user => {
                                 return res.status(200).json({
                                     data: user,
-                                    created: 'usuario creado',
+                                    msg: `cuenta creada usuario: ${user.name}`,
                                     status: 200,
                                 })
                             }).catch(error => console.log(error))

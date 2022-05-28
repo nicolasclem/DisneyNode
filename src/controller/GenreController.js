@@ -53,7 +53,7 @@ const GenreController ={
                                 association: 'movies'  
                             }],
                                 ...req.body,
-                                image: req.file.filename,
+                                image: req.file != undefined ? req.file.filename : "imagen-no-disponible",
                             })
                             .then(genre => {
                                 return res.status(200).json({

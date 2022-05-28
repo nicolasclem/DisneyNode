@@ -80,9 +80,9 @@ CREATE TABLE IF NOT EXISTS `disney_alkemy`.`characters_movies` (
   `id_character` INT NOT NULL,
   `id_movie` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `id_charecter_idx` (`id_character` ASC) ,
+  INDEX `id_character_idx` (`id_character` ASC) ,
   INDEX `id_movie_idx` (`id_movie` ASC) ,
-  CONSTRAINT `id_charecter`
+  CONSTRAINT `id_character`
     FOREIGN KEY (`id_character`)
     REFERENCES `disney_alkemy`.`characters` (`id`)
     ON DELETE NO ACTION

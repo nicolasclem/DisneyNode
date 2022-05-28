@@ -1,4 +1,6 @@
 const db = require ('../database/models')
+const {Op} = require("sequelize");
+
 
 
 
@@ -8,6 +10,15 @@ const  movieController ={
         const movies= await db.Movies.findAll({
             include: [
                 {association: 'characters'},{association:'genres'}   
+            ],
+            where:{
+                title:{
+                    [Op.substring]: req.query.title ? req.query.title: ""
+                }
+            },
+                order: [
+               
+                ["title", req.query.order && req.query.order.toUpperCase() == "DESC" ? req.query.order : "ASC"]
             ]
         })
         if (movies.length > 0) {
@@ -56,7 +67,7 @@ const  movieController ={
                                 {association: 'characters'},{association:'genres'}    
                             ],
                                 ...req.body,
-                                image: req.file.filename,
+                                image: req.file != undefined ? req.file.filename : "imagen-no-disponible",
                             })
                             .then(movie => {
                                 return res.status(200).json({
@@ -84,7 +95,7 @@ const  movieController ={
         try {
             movieDelete ?
                 res.status(200).json({
-                    delete: 'pelicula! borrado',
+                    delete: 'pelicula! borrada',
                     status: 200,
                 }) :
                 res.status(400).json({
