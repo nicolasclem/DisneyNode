@@ -1,10 +1,9 @@
-
 const db = require('../database/models');
 
 
 
 
-const  characterMovieController={
+const characterMovieController = {
 
 
 
@@ -15,7 +14,7 @@ const  characterMovieController={
             }
         })
         try {
-            characterMovie?
+            characterMovie ?
                 res.status(200).json({
                     delete: 'relacion eliminada',
                     status: 200,
@@ -30,22 +29,24 @@ const  characterMovieController={
         }
     },
 
-    create:(req,res) =>{
-      db.CharacterMovie.create({
-            include:[
-                {association:'movies'},{association:'characters'}
-            ],
-            ...req.body
-        })
-        .then( characterMovie =>{
-            return res.status(200).json({
-                data:characterMovie,
-                msg:'relacion creada',
-                status:200,
+    create: (req, res) => {
+        db.CharacterMovie.create({
+                include: [{
+                    association: 'movies'
+                }, {
+                    association: 'characters'
+                }],
+                ...req.body
             })
-        }).catch(error=>console.log(error))
+            .then(characterMovie => {
+                return res.status(200).json({
+                    data: characterMovie,
+                    msg: 'relacion creada',
+                    status: 200,
+                })
+            }).catch(error => console.log(error))
     },
 
 }
 
-module.exports =characterMovieController
+module.exports = characterMovieController

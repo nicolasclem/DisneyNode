@@ -1,20 +1,20 @@
 const db = require('../database/models');
 
-const GenreController ={
+const GenreController = {
 
     show: async (req, res) => {
-        const genres= await db.Genre.findAll({
+        const genres = await db.Genre.findAll({
             include: [{
-                association: 'movies'    
+                association: 'movies'
             }]
         })
         if (genres.length > 0) {
             try {
 
                 const allgenres = genres.map(genre => {
-                genre = {
-                        name:genre.dataValues.name,
-                        image:genre.dataValues.image
+                    genre = {
+                        name: genre.dataValues.name,
+                        image: genre.dataValues.image
                     }
                     return genre;
                 })
@@ -49,9 +49,9 @@ const GenreController ={
                         })
                     } else {
                         db.Genre.create({
-                            include: [{
-                                association: 'movies'  
-                            }],
+                                include: [{
+                                    association: 'movies'
+                                }],
                                 ...req.body,
                                 image: req.file != undefined ? req.file.filename : "imagen-no-disponible",
                             })
@@ -63,11 +63,10 @@ const GenreController ={
                                 })
                             }).catch(error => console.log(error))
                     }
-                }).catch(() =>  res.status(400).json({
+                }).catch(() => res.status(400).json({
                     msg: 'no se pudo crear  el genero de la pelicula!',
-                    status:400
-                })
-            )
+                    status: 400
+                }))
         } catch (err) {
             console.log(err)
         }

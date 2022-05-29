@@ -1,23 +1,27 @@
-const db = require ('../database/models')
-const {Op} = require("sequelize");
+const db = require('../database/models')
+const {
+    Op
+} = require("sequelize");
 
 
 
 
 
-const  movieController ={
+const movieController = {
     show: async (req, res) => {
-        const movies= await db.Movies.findAll({
-            include: [
-                {association: 'characters'},{association:'genres'}   
-            ],
-            where:{
-                title:{
-                    [Op.substring]: req.query.title ? req.query.title: ""
+        const movies = await db.Movies.findAll({
+            include: [{
+                association: 'characters'
+            }, {
+                association: 'genres'
+            }],
+            where: {
+                title: {
+                    [Op.substring]: req.query.title ? req.query.title : ""
                 }
             },
-                order: [
-               
+            order: [
+
                 ["title", req.query.order && req.query.order.toUpperCase() == "DESC" ? req.query.order : "ASC"]
             ]
         })
@@ -25,10 +29,10 @@ const  movieController ={
             try {
 
                 const allmovie = movies.map(movie => {
-                movie = {
-                        title:movie.dataValues.title,
-                        date:movie.dataValues.date,
-                        image:movie.dataValues.image
+                    movie = {
+                        title: movie.dataValues.title,
+                        date: movie.dataValues.date,
+                        image: movie.dataValues.image
                     }
                     return movie;
                 })
@@ -48,7 +52,13 @@ const  movieController ={
         }
 
     },
-    create: (req, res) => {
+    create: async(req, res) => {
+        const genres = await db.Genre.findAll({
+            include: [{
+                association: 'movies'
+            }]
+        })
+        if (genres.length > 0) {
         try {
             db.Movies.findOne({
                     where: {
@@ -63,9 +73,11 @@ const  movieController ={
                         })
                     } else {
                         db.Movies.create({
-                            include: [
-                                {association: 'characters'},{association:'genres'}    
-                            ],
+                                include: [{
+                                    association: 'characters'
+                                }, {
+                                    association: 'genres'
+                                }],
                                 ...req.body,
                                 image: req.file != undefined ? req.file.filename : "imagen-no-disponible",
                             })
@@ -77,14 +89,20 @@ const  movieController ={
                                 })
                             }).catch(error => console.log(error))
                     }
-                }).catch(() =>  res.status(400).json({
+                }).catch(() => res.status(400).json({
                     msg: 'no se pudo crear la pelicula!',
-                    status:400
-                })
-            )
+                    status: 400
+                }))
         } catch (err) {
             console.log(err)
         }
+    }else{
+        res.status(400).json({
+            msg: "Recuerde  que debe tener Generos creados antes de crear  MOVIE",
+            status: 400
+        })
+
+    }
     },
     del: async (req, res) => {
         const movieDelete = await db.Movies.destroy({
@@ -110,9 +128,11 @@ const  movieController ={
     edit: async (req, res) => {
 
         const movieToEdit = await db.Movies.findByPk(req.params.id, {
-            include: [
-                {association: 'characters'},{association:'genres'}    
-            ]
+            include: [{
+                association: 'characters'
+            }, {
+                association: 'genres'
+            }]
         })
 
         try {
@@ -151,31 +171,34 @@ const  movieController ={
     },
     detail: async (req, res) => {
         const movie = await db.Movies.findByPk(req.params.id, {
-            include: [
-                {association: 'characters'} ,{ association:'genres'}  
-            ]
-            
+            include: [{
+                association: 'characters'
+            }, {
+                association: 'genres'
+            }]
+
         })
         try {
-            
-            
-            if(movie){
-            const characterArr = movie.characters.map(x => x.name)
-                        
-                        const oneMovie={
-                            id:movie.dataValues.id,
-                            title:movie.dataValues.title,
-                            rating:movie.dataValues.rating,
-                            image:movie.dataValues.image,
-                            date:movie.dataValues.date,
-                            id_genre:movie.dataValues.genres.name,
-                            characters:characterArr
-                        }
+
+
+            if (movie) {
+                const characterArr = movie.characters.map(x => x.name)
+
+                const oneMovie = {
+                    id: movie.dataValues.id,
+                    title: movie.dataValues.title,
+                    rating: movie.dataValues.rating,
+                    image: movie.dataValues.image,
+                    date: movie.dataValues.date,
+                    id_genre: movie.dataValues.genres.name,
+                    characters: characterArr
+                }
                 res.status(200).json({
                     data: oneMovie,
                     status: 200
-                }) 
-            }else{     res.status(400).json({
+                })
+            } else {
+                res.status(400).json({
                     msg: "no se encuentra la pelicula",
                     status: 400
                 })

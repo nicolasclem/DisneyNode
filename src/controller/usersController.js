@@ -2,56 +2,70 @@ require('dotenv').config();
 
 const db = require('../database/models');
 const bcrypt = require('bcryptjs');
-const  jwt = require ('jsonwebtoken')
+const jwt = require('jsonwebtoken')
 
 
-const  userController = {
+const userController = {
 
-    login:  (req,res)=>{
+    login: (req, res) => {
 
-        const {email,password}= req.body;
+        const {
+            email,
+            password
+        } = req.body;
         try {
             db.User.findOne({
-                where: {
-                    email
-                }
-            })
-            .then(user =>{
-                if(user){
-                    const passUSer = bcrypt.compareSync(password,user.password)
-                    
-                    
-                    if(passUSer){ 
-                        const expireToken = 420;
-                        const token = jwt.sign({data:email},process.env.JWT_SECRET,{expiresIn:expireToken})
+                    where: {
+                        email
+                    }
+                })
+                .then(user => {
+                    if (user) {
+                        const passUSer = bcrypt.compareSync(password, user.password)
 
-                        res.status(200).json({
-                        msg:`bienvenido usuario: ${user.name}`,
-                        time: `su token expira en  ${expireToken/60} min`,
-                        token: token
-                    })
-                }else {res.status(400).json({
-                        msg:'Contraseña incorrecta'
-                    })
+
+                        if (passUSer) {
+                            const expireToken = 420;
+                            const token = jwt.sign({
+                                data: email
+                            }, process.env.JWT_SECRET, {
+                                expiresIn: expireToken
+                            })
+
+                            res.status(200).json({
+                                msg: `bienvenido usuario: ${user.name}`,
+                                time: `su token expira en  ${expireToken/60} min`,
+                                token: token
+                            })
+                        } else {
+                            res.status(400).json({
+                                msg: 'Contraseña incorrecta'
+                            })
+
+                        }
+
+                    } else {
+                        return res.status(400).json({
+                            msg: 'usuario no registrado'
+
+                        })
 
                     }
 
-                }else{
-                    return res.status(400).json({
-                        msg: 'usuario no registrado'
+                }).catch(error => console.log(error))
+        } catch (error) {
+            console.log(error)
+        }
 
-                })
-              
-            }
-          
-        }).catch (error => console.log(error) )
-        } catch (error) { console.log(error) }
-        
 
     },
-    
-    register:  (req, res) => {
-        const { name, email, password } = req.body;
+
+    register: (req, res) => {
+        const {
+            name,
+            email,
+            password
+        } = req.body;
         try {
             db.User.findOne({
                     where: {
@@ -79,7 +93,9 @@ const  userController = {
                             }).catch(error => console.log(error))
                     }
                 }).catch(error => console.log(error))
-        } catch (error) { console.log(error) }
+        } catch (error) {
+            console.log(error)
+        }
     }
 
 }
